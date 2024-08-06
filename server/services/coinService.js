@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const COINGECKO_API_BASE_URL = "https://api.coingecko.com/api/v3";
 
-export const fetchCoinData = async (CoinId) => {
+const fetchCoinData = async (CoinId) => {
   try {
     const { data } = await axios.get(
       `${COINGECKO_API_BASE_URL}/coins/${CoinId}`
@@ -13,7 +13,7 @@ export const fetchCoinData = async (CoinId) => {
   }
 };
 
-export const fetchCoinList = async () => {
+const fetchCoinList = async () => {
   try {
     const { data } = await axios.get(
       `${COINGECKO_API_BASE_URL}/coins/markets`,
@@ -27,4 +27,9 @@ export const fetchCoinList = async () => {
   } catch (error) {
     console.log("Error", error);
   }
+};
+
+module.exports = {
+  fetchCoinData,
+  fetchCoinList,
 };

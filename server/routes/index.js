@@ -13,7 +13,7 @@ const routerTransactions = require("./transaction");
 router.use("/users", routerUsers);
 router.use("/portfolios", routerPortfolios);
 router.use("/portfolio-items", routerPortfolioItems);
-router.use("/coins", routerCoins);
+router.use("/api/coins", routerCoins);
 router.use("/transactions", routerTransactions);
 router.use("/notifications", routerNotifications);
 router.use("/news", routerNews);

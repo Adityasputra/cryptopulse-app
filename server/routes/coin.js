@@ -1,8 +1,10 @@
+const CoinController = require("../controllers/coinController");
+
 const router = require("express").Router();
 
-router.post("/", () => {});
-router.get("/", () => {});
-router.get("/:id", () => {});
+router.post("/", CoinController.createCoin);
+router.get("/", CoinController.getAllCoins);
+router.get("/:id", CoinController.getCoinById);
 router.put("/:id", () => {});
 router.delete("/:id", () => {});
 
