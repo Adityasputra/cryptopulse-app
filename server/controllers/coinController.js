@@ -23,5 +23,14 @@ module.exports = class CoinController {
     }
   }
 
-  
+  static async getAllCoins(req, res) {
+    try {
+      const coins = Coin.findAll();
+      res.status(200).json(coins);
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal Server Error",
+      });
+    }
+  }
 };
