@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
     /**
@@ -10,18 +8,77 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Transaction.belongsTo(models.User);
+      Transaction.belongsTo(models.Coin);
     }
   }
-  Transaction.init({
-    UserId: DataTypes.INTEGER,
-    CoinId: DataTypes.INTEGER,
-    transactionType: DataTypes.STRING,
-    quantity: DataTypes.DECIMAL,
-    price: DataTypes.DECIMAL
-  }, {
-    sequelize,
-    modelName: 'Transaction',
-  });
+  Transaction.init(
+    {
+      UserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: {
+            msg: "Must be an Integer",
+          },
+        },
+      },
+      CoinId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: {
+            msg: "Must be an Integer",
+          },
+        },
+      },
+      transactionType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Transaction type is required",
+          },
+          notNull: {
+            msg: "Transaction type is required",
+          },
+          isIn: {
+            args: [["buy"], ["sell"]],
+            msg: "Only 'Buy' or 'Sell' is allowed",
+          },
+        },
+      },
+      quantity: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        validate: {
+          isDecimal: {
+            msg: "Must be an Decimal",
+          },
+          min: {
+            args: 0,
+            msg: "Quantity must not be less than 0",
+          },
+        },
+      },
+      price: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        validate: {
+          isDecimal: {
+            msg: "Must be an Decimal",
+          },
+          min: {
+            args: 0,
+            msg: "Price must not be less than 0",
+          },
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "Transaction",
+    }
+  );
   return Transaction;
 };

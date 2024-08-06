@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class PortfolioItem extends Model {
     /**
@@ -10,17 +8,61 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      PortfolioItem.belongsTo(models.Portfolio);
+      PortfolioItem.belongsTo(models.Coin);
     }
   }
-  PortfolioItem.init({
-    PortfolioId: DataTypes.INTEGER,
-    CoinId: DataTypes.INTEGER,
-    quantity: DataTypes.DECIMAL,
-    purchasePrice: DataTypes.DECIMAL
-  }, {
-    sequelize,
-    modelName: 'PortfolioItem',
-  });
+  PortfolioItem.init(
+    {
+      PortfolioId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: {
+            msg: "Must be an Integer",
+          },
+        },
+      },
+      CoinId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: {
+            msg: "Must be an Integer",
+          },
+        },
+      },
+      quantity: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        validate: {
+          isDecimal: {
+            msg: "Must be an Decimal",
+          },
+          min: {
+            args: 0,
+            msg: "Quantity must not be less than 0",
+          },
+        },
+      },
+      purchasePrice: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        validate: {
+          isDecimal: {
+            msg: "Must be an Decimal",
+          },
+          min: {
+            args: 0,
+            msg: "Price must not be less than 0",
+          },
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "PortfolioItem",
+    }
+  );
   return PortfolioItem;
 };
