@@ -55,4 +55,31 @@ module.exports = class CoinController {
       }
     }
   }
+
+  static async updateCoin(req, res) {
+    try {
+      const [updated] = await Coin.update(req.body, {
+        where: {
+          id: req.params.id,
+        },
+      });
+
+      if (!updated) {
+        throw { name: "Not Found" };
+      } else {
+        const updatedCoin = await Coin.findByPk(req.params.id);
+        res.status(200).json(updatedCoin);
+      }
+    } catch (error) {
+      if (error.name === "Not Found") {
+        res.status(404).json({
+          message: "Not Found",
+        });
+      } else {
+        res.status(500).json({
+          message: "Internal Server Error",
+        });
+      }
+    }
+  }
 };
