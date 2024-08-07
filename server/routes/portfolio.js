@@ -1,11 +1,12 @@
+const PortfolioController = require("../controllers/portfolioController");
 const router = require("express").Router();
 
-router.post("/", () => {});
-router.get("/", () => {});
-router.get("/:id", () => {});
-router.put("/:id", () => {});
-router.delete("/:id", () => {});
+router.post("/", PortfolioController.createPortfolio);
+router.get("/", PortfolioController.getAllPortfolios);
+router.get("/:id", PortfolioController.getPortfolioById);
+router.put("/:id", PortfolioController.updatePortfolio);
+router.delete("/:id", PortfolioController.deletePortfolio);
 
-router.get("/:portfolioId/items", () => {});
+router.get("/:portfolioId/items", PortfolioController.getPortfolioItems);
 
 module.exports = router;

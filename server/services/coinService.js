@@ -1,34 +1,39 @@
 const axios = require("axios");
-
 const COINGECKO_API_BASE_URL = "https://api.coingecko.com/api/v3";
 
-const fetchCoinData = async (CoinId) => {
-  try {
-    const { data } = await axios.get(
-      `${COINGECKO_API_BASE_URL}/coins/${CoinId}`
-    );
-    return data;
-  } catch (error) {
-    console.log("Error", error);
+const fetchCoinData = async (coinId) => {
+  if (!coinId) {
+    throw new Error("coinId is required");
   }
-};
-
-const fetchCoinList = async () => {
   try {
     const { data } = await axios.get(
-      `${COINGECKO_API_BASE_URL}/coins/markets`,
+      `${COINGECKO_API_BASE_URL}/coins/${coinId}`,
       {
         params: {
           vs_currency: "usd",
-          order: "market_cap_desc",
-          perPage: 10,
-          page: 1,
         },
       }
     );
     return data;
   } catch (error) {
-    console.log("Error", error);
+    console.error(
+      "Error fetching coin data:",
+      error.response ? error.response.data : error.message
+    );
+    throw new Error("Failed to fetch coin data");
+  }
+};
+
+const fetchCoinList = async () => {
+  try {
+    const { data } = await axios.get(`${COINGECKO_API_BASE_URL}/coins/list`);
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching coin list:",
+      error.response ? error.response.data : error.message
+    );
+    throw new Error("Failed to fetch coin list");
   }
 };
 

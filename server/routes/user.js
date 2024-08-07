@@ -1,11 +1,10 @@
-const { getAllUsers } = require("../controllers/userController");
-
+const UserController = require("../controllers/userController");
 const router = require("express").Router();
 
-router.get("/", getAllUsers);
-router.get("/:id", () => {});
-router.put("/:id", () => {});
-router.delete("/:id", () => {});
+router.get("/", UserController.createUser);
+router.get("/:id", UserController.getAllUsers);
+router.put("/:id", UserController.updateUser);
+router.delete("/:id", UserController.deleteUser);
 
 router.get("/:userId/notifications", () => {});
 router.get("/:userId/transactions", () => {});

@@ -1,33 +1,25 @@
-const { hashPassword } = require("../helpers/hashPassword");
 const { User } = require("../models");
+const { comparePassword } = require("../helpers/hashPassword");
+const { signToken } = require("../helpers/jwt");
 
 module.exports = class UserController {
   static async createUser(req, res) {
     try {
-      const { username, email, password } = req.body;
-      const newUser = await User.create({
-        username,
-        email,
-        password,
-      });
-
+      const user = await User.create(req.body);
       res.status(201).json({
-        username: newUser.username,
-        email: newUser.email,
+        id: user.id,
+        username: user.username,
+        email: user.email,
       });
     } catch (error) {
       if (
         error.name === "SequelizeValidationError" ||
         error.name === "SequelizeUniqueConstraintError"
       ) {
-        const validate = error.errors.map((e) => e.message);
-        res.status(400).json({
-          message: validate,
-        });
+        const errors = error.errors.map((e) => e.message);
+        res.status(400).json({ errors });
       } else {
-        res.status(500).json({
-          message: "Internal Server Error",
-        });
+        res.status(500).json({ message: "Internal Server Error" });
       }
     }
   }
@@ -37,9 +29,73 @@ module.exports = class UserController {
       const users = await User.findAll();
       res.status(200).json(users);
     } catch (error) {
-      res.status(500).json({
-        message: "Internal Server Error",
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async getUserById(req, res) {
+    try {
+      const user = await User.findByPk(req.params.id);
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+      } else {
+        res.status(200).json(user);
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async updateUser(req, res) {
+    try {
+      const [updated] = await User.update(req.body, {
+        where: { id: req.params.id },
       });
+      if (!updated) {
+        res.status(404).json({ message: "User not found" });
+      } else {
+        const updatedUser = await User.findByPk(req.params.id);
+        res.status(200).json(updatedUser);
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async deleteUser(req, res) {
+    try {
+      const deleted = await User.destroy({
+        where: { id: req.params.id },
+      });
+      if (!deleted) {
+        res.status(404).json({ message: "User not found" });
+      } else {
+        res.status(204).json();
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async loginUser(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ where: { email } });
+      if (!user || !comparePassword(password, user.password)) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      const token = signToken({ id: user.id, email: user.email });
+      res.status(200).json({ token });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async googleLogin(req, res) {
+    try {
+      res.status(501).json({ message: "Google login not implemented yet" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 };
