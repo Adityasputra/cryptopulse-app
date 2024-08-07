@@ -8,7 +8,7 @@ router.get("/:id", CoinController.getCoinById);
 router.put("/:id", CoinController.updateCoin);
 router.delete("/:id", () => {});
 
-router.get("/:coinId/news", () => {});
-router.get("/:coinId/transactions", () => {});
+router.get("/:coinId/data", CoinController.fetchCoinDataFromAPI);
+router.get("/list", () => {});
 
 module.exports = router;

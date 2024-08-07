@@ -82,4 +82,15 @@ module.exports = class CoinController {
       }
     }
   }
+
+  static async fetchCoinDataFromAPI(req, res) {
+    try {
+      const coinData = await fetchCoinData(req.params.CoinId);
+      res.status(200).json(coinData);
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal Server Error",
+      });
+    }
+  }
 };
