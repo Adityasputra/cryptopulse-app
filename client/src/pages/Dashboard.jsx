@@ -1,4 +1,9 @@
+import Balance from "../components/Balance";
+import BuySection from "../components/BuySection";
+import Portfolio from "../components/Portfolio";
 import Sidebar from "../components/Sidebar";
+import Statistics from "../components/Statistics";
+import Watchlist from "../components/Watchlist";
 
 export default function Dashboard() {
   return (
