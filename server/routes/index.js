@@ -14,9 +14,10 @@ const routerNotifications = require("./notification");
 const routerTransactions = require("./transaction");
 
 const auth = require("../middlewares/authentication");
+const UserController = require("../controllers/userController");
 
-router.post("/register", createUser);
-router.post("/login", loginUser);
+router.post("/register", UserController.createUser);
+router.post("/login", UserController.loginUser);
 router.post("/google", googleLogin);
 
 // Use Middlewares

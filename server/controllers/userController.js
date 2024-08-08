@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { comparePassword } = require("../helpers/hashPassword");
+const { comparePassword, comparedPassword } = require("../helpers/hashPassword");
 const { signToken } = require("../helpers/jwt");
 
 module.exports = class UserController {
@@ -80,13 +80,26 @@ module.exports = class UserController {
   static async loginUser(req, res) {
     try {
       const { email, password } = req.body;
+
+      // Check if email and password are provided
+      if (!email || !password) {
+        return res
+          .status(400)
+          .json({ message: "Email and password are required" });
+      }
+
       const user = await User.findOne({ where: { email } });
-      if (!user || !comparePassword(password, user.password)) {
+
+      // Check if user exists and password matches
+      if (!user || !comparedPassword(password, user.password)) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-      const token = signToken({ id: user.id, email: user.email });
-      res.status(200).json({ token });
+
+      const access_token = signToken({ id: user.id, email: user.email });
+
+      res.status(200).json({ access_token });
     } catch (error) {
+      console.error("Error logging in user:", error); // Log the error for debugging
       res.status(500).json({ message: "Internal Server Error" });
     }
   }

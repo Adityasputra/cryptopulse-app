@@ -3,12 +3,12 @@ const { User } = require("../models");
 
 const auth = async (req, res, next) => {
   try {
-    const accessToken = req.headers.authorization;
-    if (!accessToken) {
+    const access_token = req.headers.authorization;
+    if (!access_Token) {
       return res.status(401).json({ message: "No token provided" });
     }
 
-    const [type, token] = accessToken.split(" ");
+    const [type, token] = access_token.split(" ");
     if (type !== "Bearer" || !token) {
       return res.status(401).json({ message: "Invalid token format" });
     }
