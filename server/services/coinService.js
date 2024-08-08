@@ -11,9 +11,6 @@ const fetchCoinData = async (coinId) => {
       {
         params: {
           vs_currency: "usd",
-          order: "market_cap_rank_desc",
-          perPage: 10,
-          page: 1,
         },
       }
     );
@@ -23,7 +20,7 @@ const fetchCoinData = async (coinId) => {
       "Error fetching coin data:",
       error.response ? error.response.data : error.message
     );
-    throw new Error("Failed to fetch coin data");
+    throw new Error(`Failed to fetch coin data for coinId ${coinId}`);
   }
 };
 

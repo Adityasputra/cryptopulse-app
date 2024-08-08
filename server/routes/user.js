@@ -1,13 +1,13 @@
-const UserController = require("../controllers/userController");
 const router = require("express").Router();
+const UserController = require("../controllers/userController");
+const auth = require("../middlewares/authentication");
 
-router.get("/", UserController.createUser);
-router.get("/:id", UserController.getAllUsers);
-router.put("/:id", UserController.updateUser);
-router.delete("/:id", UserController.deleteUser);
-
-router.get("/:userId/notifications", () => {});
-router.get("/:userId/transactions", () => {});
-router.get("/:userId/portfolios", () => {});
+router.get("/", auth, UserController.getAllUsers);
+router.get("/:id", auth, UserController.getUserById);
+router.put("/:id", auth, UserController.updateUser);
+router.delete("/:id", auth, UserController.deleteUser);
+router.post("/register", UserController.createUser);
+router.post("/login", UserController.loginUser);
+router.post("/google-login", UserController.googleLogin);
 
 module.exports = router;

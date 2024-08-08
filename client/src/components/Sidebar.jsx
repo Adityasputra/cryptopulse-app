@@ -38,6 +38,12 @@ export default function Sidebar() {
           >
             News
           </NavLink>
+          <NavLink
+            to="/help-api-gemini"
+            className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700"
+          >
+            Help with Gemini
+          </NavLink>
         </nav>
       </div>
     </>

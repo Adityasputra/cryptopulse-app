@@ -1,6 +1,7 @@
 import axios from "../services/axiosInstance";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -23,81 +24,96 @@ export default function Register() {
         },
       });
 
-      navigate("/home");
+      if (data.success) {
+        navigate("/home");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: "Please try again.",
+        });
+      }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "An Error Occurred",
+        text: error.response?.data?.message || "Please try again.",
+      });
     }
   };
+
   return (
-    <>
-      <div
-        className="flex items-center justify-center min-h-screen"
-        style={{ background: "#2B2B2B" }}
-      >
-        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-center text-gray-800">
-            Create an Account
-          </h2>
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-gray-700">
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-gray-700">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <button
-              type="submit"
-              style={{
-                background: "#a259ff",
-                color: "white",
-                fontWeight: "bold",
-              }}
-              className="w-full py-2 px-4 font-semibold rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400"
+    <div className="flex items-center justify-center min-h-screen bg-gray-800">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
+        <h2 className="text-3xl font-extrabold text-center text-gray-900">
+          Create an Account
+        </h2>
+        <form onSubmit={handleRegister} className="space-y-6">
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
             >
-              Register
-            </button>
-            <p className="text-center text-gray-600">
-              Already have an account?{" "}
-              <Link to="/" className="text-blue-500 hover:underline">
-                Login
-              </Link>
-            </p>
-          </form>
-        </div>
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              aria-label="Username"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              aria-label="Email"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              aria-label="Password"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Register
+          </button>
+          <p className="text-center text-gray-600">
+            Already have an account?{" "}
+            <Link to="/" className="text-indigo-600 hover:underline">
+              Login
+            </Link>
+          </p>
+        </form>
       </div>
-    </>
+    </div>
   );
 }

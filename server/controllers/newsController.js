@@ -48,8 +48,9 @@ module.exports = class NewsController {
     try {
       const [updated] = await News.update(req.body, {
         where: { id: req.params.id },
+        returning: true,
       });
-      if (!updated) {
+      if (updated[0] === 0) {
         res.status(404).json({ message: "News not found" });
       } else {
         const updatedNews = await News.findByPk(req.params.id, {
@@ -67,7 +68,7 @@ module.exports = class NewsController {
       const deleted = await News.destroy({
         where: { id: req.params.id },
       });
-      if (!deleted) {
+      if (deleted === 0) {
         res.status(404).json({ message: "News not found" });
       } else {
         res.status(204).json();

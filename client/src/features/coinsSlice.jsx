@@ -6,7 +6,8 @@ export const fetchCoins = createAsyncThunk("coins/fetchCoins", async () => {
     const response = await axios.get("/api/coins/data/markets");
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    const errorMessage = error.response ? error.response.data : error.message;
+    throw new Error(errorMessage);
   }
 });
 

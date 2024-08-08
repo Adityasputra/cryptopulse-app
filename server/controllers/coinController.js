@@ -55,7 +55,7 @@ class CoinController {
         { apiId, name, symbol, currentPrice, marketCap, volume },
         { where: { id }, returning: true }
       );
-      if (!updated) {
+      if (updated[0] === 0) {
         return res.status(404).json({ message: "Coin not found" });
       }
       res.status(200).json({ message: "Coin updated successfully" });
@@ -69,7 +69,7 @@ class CoinController {
     try {
       const { id } = req.params;
       const deleted = await Coin.destroy({ where: { id } });
-      if (!deleted) {
+      if (deleted === 0) {
         return res.status(404).json({ message: "Coin not found" });
       }
       res.status(200).json({ message: "Coin deleted successfully" });
@@ -82,14 +82,12 @@ class CoinController {
   static async fetchCoinDataFromAPI(req, res) {
     try {
       const { coinId } = req.params;
-      console.log(coinId);
       if (!coinId) {
         return res
           .status(400)
           .json({ message: "coinId parameter is required" });
       }
       const data = await fetchCoinData(coinId);
-      console.log(data)
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching coin data from API:", error);

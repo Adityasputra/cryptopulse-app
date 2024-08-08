@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { comparePassword, comparedPassword } = require("../helpers/hashPassword");
+const { comparedPassword } = require("../helpers/hashPassword");
 const { signToken } = require("../helpers/jwt");
 
 module.exports = class UserController {
@@ -50,8 +50,9 @@ module.exports = class UserController {
     try {
       const [updated] = await User.update(req.body, {
         where: { id: req.params.id },
+        returning: true,
       });
-      if (!updated) {
+      if (updated === 0) {
         res.status(404).json({ message: "User not found" });
       } else {
         const updatedUser = await User.findByPk(req.params.id);
@@ -67,7 +68,7 @@ module.exports = class UserController {
       const deleted = await User.destroy({
         where: { id: req.params.id },
       });
-      if (!deleted) {
+      if (deleted === 0) {
         res.status(404).json({ message: "User not found" });
       } else {
         res.status(204).json();
@@ -81,7 +82,6 @@ module.exports = class UserController {
     try {
       const { email, password } = req.body;
 
-      // Check if email and password are provided
       if (!email || !password) {
         return res
           .status(400)
@@ -90,7 +90,6 @@ module.exports = class UserController {
 
       const user = await User.findOne({ where: { email } });
 
-      // Check if user exists and password matches
       if (!user || !comparedPassword(password, user.password)) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
@@ -99,7 +98,7 @@ module.exports = class UserController {
 
       res.status(200).json({ access_token });
     } catch (error) {
-      console.error("Error logging in user:", error); // Log the error for debugging
+      console.error("Error logging in user:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }

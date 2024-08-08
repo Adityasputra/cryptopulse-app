@@ -48,8 +48,9 @@ module.exports = class PortfolioItemController {
     try {
       const [updated] = await PortfolioItem.update(req.body, {
         where: { id: req.params.id },
+        returning: true,
       });
-      if (!updated) {
+      if (updated[0] === 0) {
         res.status(404).json({ message: "Portfolio Item not found" });
       } else {
         const updatedPortfolioItem = await PortfolioItem.findByPk(
@@ -70,7 +71,7 @@ module.exports = class PortfolioItemController {
       const deleted = await PortfolioItem.destroy({
         where: { id: req.params.id },
       });
-      if (!deleted) {
+      if (deleted === 0) {
         res.status(404).json({ message: "Portfolio Item not found" });
       } else {
         res.status(204).json();

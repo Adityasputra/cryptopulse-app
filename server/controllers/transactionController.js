@@ -48,8 +48,9 @@ module.exports = class TransactionController {
     try {
       const [updated] = await Transaction.update(req.body, {
         where: { id: req.params.id },
+        returning: true,
       });
-      if (!updated) {
+      if (updated[0] === 0) {
         res.status(404).json({ message: "Transaction not found" });
       } else {
         const updatedTransaction = await Transaction.findByPk(req.params.id, {
@@ -67,7 +68,7 @@ module.exports = class TransactionController {
       const deleted = await Transaction.destroy({
         where: { id: req.params.id },
       });
-      if (!deleted) {
+      if (deleted === 0) {
         res.status(404).json({ message: "Transaction not found" });
       } else {
         res.status(204).json();

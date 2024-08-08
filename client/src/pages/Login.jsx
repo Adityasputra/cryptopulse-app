@@ -1,6 +1,7 @@
 import axios from "../services/axiosInstance";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,32 +15,44 @@ export default function Login() {
     try {
       const { data } = await axios({
         method: "POST",
-        url: "/login",
+        url: "api/users/login",
         data: {
           email,
           password,
         },
       });
 
-      localStorage.setItem("access_token", data.access_token);
-      navigate("/home");
+      if (data.access_token) {
+        localStorage.setItem("access_token", data.access_token);
+        navigate("/dashboard");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Please try again.",
+        });
+      }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "An Error Occurred",
+        text: error.response?.data?.message || "Please try again.",
+      });
     }
   };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen"
-      style={{ background: "#2B2B2B" }}
-    >
+    <div className="flex items-center justify-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800">
+        <h2 className="text-3xl font-extrabold text-center text-gray-900">
           Login to Your Account
         </h2>
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -48,11 +61,14 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -61,23 +77,18 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <button
             type="submit"
-            style={{
-              background: "#a259ff",
-              color: "white",
-              fontWeight: "bold",
-            }}
-            className=" w-full py-2 px-4 font-semibold rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Login
           </button>
-          <p className="text-center text-gray-600">
+          <p className="text-center text-gray-600 text-sm">
             Don't have an account?{" "}
-            <Link to='/register' className="text-blue-500 hover:underline">
+            <Link to="/register" className="text-indigo-600 hover:underline">
               Register
             </Link>
           </p>

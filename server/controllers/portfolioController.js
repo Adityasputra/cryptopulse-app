@@ -1,4 +1,4 @@
-const { Portfolio, User, PortfolioItem } = require("../models");
+const { Portfolio, PortfolioItem, Coin, User } = require("../models");
 
 module.exports = class PortfolioController {
   static async createPortfolio(req, res) {
@@ -48,8 +48,9 @@ module.exports = class PortfolioController {
     try {
       const [updated] = await Portfolio.update(req.body, {
         where: { id: req.params.id },
+        returning: true,
       });
-      if (!updated) {
+      if (updated[0] === 0) {
         res.status(404).json({ message: "Portfolio not found" });
       } else {
         const updatedPortfolio = await Portfolio.findByPk(req.params.id, {
@@ -67,11 +68,26 @@ module.exports = class PortfolioController {
       const deleted = await Portfolio.destroy({
         where: { id: req.params.id },
       });
-      if (!deleted) {
+      if (deleted === 0) {
         res.status(404).json({ message: "Portfolio not found" });
       } else {
         res.status(204).json();
       }
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async getUserPortfolios(req, res) {
+    try {
+      const userId = req.user.id;
+      const portfolios = await Portfolio.findAll({
+        where: { userId: userId },
+        include: [
+          { model: PortfolioItem, as: "PortfolioItems", include: [Coin] },
+        ],
+      });
+      res.status(200).json(portfolios);
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error" });
     }
@@ -88,7 +104,44 @@ module.exports = class PortfolioController {
       }
       res.status(200).json(portfolio.PortfolioItems);
     } catch (error) {
-      console.error("Error fetching portfolio items:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async buyCoin(req, res) {
+    try {
+      const { coinId, quantity } = req.body;
+      const userId = req.user.id;
+
+      const coin = await Coin.findByPk(coinId);
+      if (!coin) {
+        return res.status(404).json({ message: "Coin not found" });
+      }
+
+      const totalCost = coin.price * quantity;
+
+      const user = await User.findByPk(userId);
+      if (!user || user.balance < totalCost) {
+        return res.status(400).json({ message: "Insufficient balance" });
+      }
+
+      user.balance -= totalCost;
+      await user.save();
+
+      let portfolio = await Portfolio.findOne({ where: { userId } });
+      if (!portfolio) {
+        portfolio = await Portfolio.create({ userId });
+      }
+
+      const portfolioItem = await PortfolioItem.create({
+        portfolioId: portfolio.id,
+        coinId,
+        quantity,
+      });
+
+      res.status(201).json(portfolioItem);
+    } catch (error) {
+      console.error("Error buying coin:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }

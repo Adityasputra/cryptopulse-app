@@ -48,8 +48,9 @@ module.exports = class NotificationController {
     try {
       const [updated] = await Notification.update(req.body, {
         where: { id: req.params.id },
+        returning: true,
       });
-      if (!updated) {
+      if (updated[0] === 0) {
         res.status(404).json({ message: "Notification not found" });
       } else {
         const updatedNotification = await Notification.findByPk(req.params.id, {
@@ -67,7 +68,7 @@ module.exports = class NotificationController {
       const deleted = await Notification.destroy({
         where: { id: req.params.id },
       });
-      if (!deleted) {
+      if (deleted === 0) {
         res.status(404).json({ message: "Notification not found" });
       } else {
         res.status(204).json();

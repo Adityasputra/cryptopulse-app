@@ -14,10 +14,8 @@ app.post("/gemini", async (req, res, next) => {
     const { input } = req.body;
     let data = await gemini(input);
 
-    console.log(data, "Data <---2")
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: "Internal Server Error",
     });
