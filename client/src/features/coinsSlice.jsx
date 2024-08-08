@@ -2,8 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../services/axiosInstance";
 
 export const fetchCoins = createAsyncThunk("coins/fetchCoins", async () => {
-  const response = await axios.get("api/coins/data/markets");
-  return response.data;
+  try {
+    const response = await axios.get("/api/coins/data/markets");
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
 });
 
 const coinsSlice = createSlice({

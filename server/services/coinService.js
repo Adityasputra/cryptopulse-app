@@ -11,6 +11,9 @@ const fetchCoinData = async (coinId) => {
       {
         params: {
           vs_currency: "usd",
+          order: "market_cap_rank_desc",
+          perPage: 10,
+          page: 1,
         },
       }
     );

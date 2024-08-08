@@ -89,6 +89,7 @@ class CoinController {
           .json({ message: "coinId parameter is required" });
       }
       const data = await fetchCoinData(coinId);
+      console.log(data)
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching coin data from API:", error);
