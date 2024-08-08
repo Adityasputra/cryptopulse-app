@@ -1,10 +1,11 @@
-import React from "react";
+import { NavLink } from "react-router-dom";
+
 export default function Sidebar() {
   return (
     <>
       <div className="w-64 bg-gray-800 text-white min-h-screen">
         <div className="p-4">
-          <h2 className="text-xl font-bold">ManyCrypto</h2>
+          <h2 className="text-xl font-bold">Dashboard</h2>
         </div>
         <nav className="mt-10">
           <NavLink
