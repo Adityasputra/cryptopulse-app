@@ -2,23 +2,27 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../services/axiosInstance";
 
 export const fetchCoins = createAsyncThunk("coins/fetchCoins", async () => {
-  try {
-    const response = await axios.get("/api/coins/data/markets");
-    return response.data;
-  } catch (error) {
-    const errorMessage = error.response ? error.response.data : error.message;
-    throw new Error(errorMessage);
-  }
+  const response = await axios.get("/api/coins/api/markets");
+  return response.data;
 });
 
 const coinsSlice = createSlice({
   name: "coins",
   initialState: {
     coins: [],
+    portfolio: [],
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    addCoinToPortfolio: (state, action) => {
+      const coin = action.payload;
+      state.portfolio.push(coin);
+    },
+    setPortfolio: (state, action) => {
+      state.portfolio = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCoins.pending, (state) => {
@@ -35,4 +39,8 @@ const coinsSlice = createSlice({
   },
 });
 
+// Export the actions
+export const { addCoinToPortfolio, setPortfolio } = coinsSlice.actions;
+
+// Export the reducer
 export default coinsSlice.reducer;

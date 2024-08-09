@@ -1,5 +1,5 @@
 import axios from "../services/axiosInstance";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -41,6 +41,41 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    async function handleCredentialResponse(response) {
+      try {
+        const { data } = await axios({
+          method: "post",
+          url: "/google-login",
+          headers: {
+            google_token: response.credential,
+          },
+        });
+
+        localStorage.setItem("access_token", data.access_token);
+        navigate("dashboard");
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occurred",
+          text: error.response?.data?.message || "Please try again.",
+        });
+      }
+    }
+
+    google.accounts.id.initialize({
+      client_id:
+        "914092917679-rtvfu1ah4qbvlvechebnmaokjn66t6gc.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+    });
+
+    google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+
+    google.accounts.id.prompt();
+  }, []);
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
@@ -86,6 +121,7 @@ export default function Login() {
           >
             Login
           </button>
+          <div id="buttonDiv" className="flex justify-center"></div>
           <p className="text-center text-gray-600 text-sm">
             Don't have an account?{" "}
             <Link to="/register" className="text-indigo-600 hover:underline">

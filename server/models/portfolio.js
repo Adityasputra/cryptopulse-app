@@ -1,4 +1,4 @@
-"use strict";
+("use strict");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Portfolio extends Model {
@@ -7,21 +7,34 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      Portfolio.belongsTo(models.User);
-      Portfolio.hasMany(models.PortfolioItem);
-    }
+    static associate(models) {}
   }
   Portfolio.init(
     {
-      UserId: {
-        type: DataTypes.INTEGER,
+      coinId: {
+        type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          isInt: {
-            msg: "Must be an Integer",
-          },
-        },
+        unique: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      symbol: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      current_price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      market_cap: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      price_change_percentage_24h: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
       },
     },
     {

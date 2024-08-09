@@ -24,20 +24,27 @@ ChartJS.register(
 export default function StatisticsPage() {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Hook untuk navigasi
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
-        // Use data dummy here for testing
-        const dummyData = [
-          { name: "Bitcoin", price_change_percentage_24h: 5.23 },
-          { name: "Ethereum", price_change_percentage_24h: -2.15 },
-          { name: "Ripple", price_change_percentage_24h: 3.56 },
-          { name: "Litecoin", price_change_percentage_24h: 1.78 },
-          { name: "Cardano", price_change_percentage_24h: -0.45 },
-        ];
-        setChartData(transformMarketData(dummyData));
+        const { data } = await axios({
+          method: "get",
+          url: "/api/coins/api/markets",
+          headers: {
+            Authorization: `Bearer ${localStorage.access_token}`,
+          },
+        });
+
+        const sortedData = [...data].sort(
+          (a, b) =>
+            b.price_change_percentage_24h - a.price_change_percentage_24h
+        );
+
+        const topData = sortedData.slice(0, 10);
+
+        setChartData(transformMarketData(topData));
       } catch (error) {
         console.error("Error fetching market data:", error);
       } finally {
@@ -57,8 +64,8 @@ export default function StatisticsPage() {
         {
           label: "Price Change Percentage (24h)",
           data: data.map((item) => item.price_change_percentage_24h),
-          backgroundColor: "rgba(30, 144, 255, 0.6)",
-          borderColor: "rgba(30, 144, 255, 1)",
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+          borderColor: "rgba(54, 162, 235, 1)",
           borderWidth: 2,
         },
       ],
@@ -67,21 +74,21 @@ export default function StatisticsPage() {
 
   return (
     <div className="p-8 bg-gray-900 text-white min-h-screen">
-      <h1 className="text-3xl font-extrabold mb-6 text-blue-400">
+      <h1 className="text-4xl font-extrabold mb-6 text-indigo-400">
         Market Statistics
       </h1>
       <button
         onClick={() => navigate("/dashboard")}
-        className="mb-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md"
+        className="mb-6 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
       >
-        Kembali ke Dashboard
+        Back to Dashboard
       </button>
       {loading ? (
         <div className="flex justify-center items-center min-h-screen">
           <p className="text-lg">Loading data...</p>
         </div>
       ) : chartData ? (
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
+        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-lg shadow-lg border border-gray-700">
           <div className="w-full h-72 md:h-96 lg:h-[400px]">
             <Bar
               data={chartData}
@@ -98,7 +105,9 @@ export default function StatisticsPage() {
                   tooltip: {
                     callbacks: {
                       label: (tooltipItem) =>
-                        `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`,
+                        `${
+                          tooltipItem.dataset.label
+                        }: ${tooltipItem.raw.toFixed(2)}%`,
                     },
                   },
                 },

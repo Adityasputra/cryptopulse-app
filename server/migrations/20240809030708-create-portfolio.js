@@ -9,14 +9,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      UserId: {
-        type: Sequelize.INTEGER,
+      coinId: {
+        type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "cascade",
+        unique: true,
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      symbol: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      current_price: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      market_cap: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      price_change_percentage_24h: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

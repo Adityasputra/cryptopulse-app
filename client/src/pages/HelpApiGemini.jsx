@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../services/axiosInstance"; 
+import axios from "../services/axiosInstance";
 
 export default function HelpApiGemini() {
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [queryType, setQueryType] = useState("price"); // Default to 'price'
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -13,7 +14,7 @@ export default function HelpApiGemini() {
     if (question.trim()) {
       setLoading(true);
       try {
-        const { data } = await axios.post("/gemini", { input: question });
+        const { data } = await axios.post("/gemini", { input: question, type: queryType });
         setResponse(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -39,6 +40,31 @@ export default function HelpApiGemini() {
           rows="4"
           className="w-full p-2 mb-4 rounded bg-gray-700 text-white"
         />
+        <div className="mb-4">
+          <label className="block text-lg font-medium mb-2">Query Type:</label>
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="price"
+              name="queryType"
+              value="price"
+              checked={queryType === "price"}
+              onChange={(e) => setQueryType(e.target.value)}
+              className="mr-2"
+            />
+            <label htmlFor="price" className="mr-4">Market Price</label>
+            <input
+              type="radio"
+              id="suggestion"
+              name="queryType"
+              value="suggestion"
+              checked={queryType === "suggestion"}
+              onChange={(e) => setQueryType(e.target.value)}
+              className="mr-2"
+            />
+            <label htmlFor="suggestion">Suggestion</label>
+          </div>
+        </div>
         <button
           type="submit"
           className="w-full p-2 bg-blue-600 rounded text-white"

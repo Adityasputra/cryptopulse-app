@@ -5,11 +5,12 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
-import PortfolioDetail from "./pages/portfolios-page/PortfolioDetail";
-import CreatePortfolio from "./pages/portfolios-page/CreatePortfolio";
-import EditPortfolio from "./pages/portfolios-page/EditPortfolio";
 import StatisticsPage from "./pages/StatisticsPage";
 import HelpApiGemini from "./pages/HelpApiGemini";
+import NewsPage from "./pages/NewsPage";
+import Portfolio from "./pages/Portfolio";
+import CoinDetails from "./pages/CoinDetails";
+import ProfilePage from "./pages/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -31,20 +32,6 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
-        children: [
-          {
-            path: "portfolios/create",
-            element: <CreatePortfolio />,
-          },
-          {
-            path: "portfolios/:id",
-            element: <PortfolioDetail />,
-          },
-          {
-            path: "portfolios/:id/edit",
-            element: <EditPortfolio />,
-          },
-        ],
       },
       {
         path: "statistics",
@@ -53,6 +40,18 @@ const router = createBrowserRouter([
       {
         path: "/help-api-gemini",
         element: <HelpApiGemini />,
+      },
+      {
+        path: "/news",
+        element: <NewsPage />,
+      },
+      {
+        path: "/portfolio",
+        element: <Portfolio />,
+      },
+      {
+        path: "/coin/:id",
+        element: <CoinDetails />,
       },
     ],
   },

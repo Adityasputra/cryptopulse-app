@@ -16,7 +16,7 @@ export default function Register() {
     try {
       const { data } = await axios({
         method: "POST",
-        url: "/register",
+        url: "api/users/register",
         data: {
           username,
           email,
@@ -24,15 +24,7 @@ export default function Register() {
         },
       });
 
-      if (data.success) {
-        navigate("/home");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Registration Failed",
-          text: "Please try again.",
-        });
-      }
+      navigate("/dashboard");
     } catch (error) {
       Swal.fire({
         icon: "error",

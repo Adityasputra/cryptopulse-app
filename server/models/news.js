@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       News.belongsTo(models.Coin);
+      
     }
   }
   News.init(

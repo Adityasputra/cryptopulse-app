@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "@reduxjs/toolkit": "^2.2.7",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.3",
     "chart.js": "^4.4.3",
+    "dotenv": "^16.4.5",
+    "google-auth-library": "^9.13.0",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
