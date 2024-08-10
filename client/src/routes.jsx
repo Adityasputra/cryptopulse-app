@@ -10,7 +10,6 @@ import HelpApiGemini from "./pages/HelpApiGemini";
 import NewsPage from "./pages/NewsPage";
 import Portfolio from "./pages/Portfolio";
 import CoinDetails from "./pages/CoinDetails";
-import ProfilePage from "./pages/ProfilePage";
 
 const router = createBrowserRouter([
   {

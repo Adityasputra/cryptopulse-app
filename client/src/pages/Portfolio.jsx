@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 const Portfolio = () => {
   const [portfolio, setPortfolio] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedPortfolio = JSON.parse(localStorage.getItem("portfolio")) || [];

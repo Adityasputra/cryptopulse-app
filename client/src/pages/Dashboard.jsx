@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../services/axiosInstance";
 import Sidebar from "../components/Sidebar";
@@ -7,7 +6,6 @@ import Swal from "sweetalert2";
 const Dashboard = () => {
   const [marketData, setMarketData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMarketData = async () => {

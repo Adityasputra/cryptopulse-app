@@ -6,7 +6,7 @@ export default function HelpApiGemini() {
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
-  const [queryType, setQueryType] = useState("price"); // Default to 'price'
+  const [queryType, setQueryType] = useState("price");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

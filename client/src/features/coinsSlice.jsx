@@ -39,8 +39,5 @@ const coinsSlice = createSlice({
   },
 });
 
-// Export the actions
 export const { addCoinToPortfolio, setPortfolio } = coinsSlice.actions;
-
-// Export the reducer
 export default coinsSlice.reducer;
