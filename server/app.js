@@ -42,7 +42,7 @@ app.get("/api/news/digital-currencies", async (req, res) => {
     const response = await axios.get("https://newsapi.org/v2/everything", {
       params: {
         q: "Latest developments in the cryptocurrency world",
-        apiKey: "5cd4ca0d0e5d4d27a4175e77c9b7ff9f",
+        apiKey: "",
       },
     });
 

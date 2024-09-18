@@ -12,7 +12,7 @@ export default function NewsPage() {
       try {
         const { data } = await axios({
           method: "get",
-          url: "https://newsapi.org/v2/everything?q=bitcoin&apiKey=5cd4ca0d0e5d4d27a4175e77c9b7ff9f",
+          url: "https://newsapi.org/v2/everything?q=bitcoin&apiKey=",
           headers: {
             Authorization: `Bearer ${localStorage.access_token}`,
           },
